@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Test.Hspec
-import Lib
+import Data.GraphQL
 import Data.Maybe (fromJust)
 
 p s =

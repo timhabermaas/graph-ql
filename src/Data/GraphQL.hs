@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
-module Lib
+module Data.GraphQL
     ( parseGraphQL
     -- TODO move these to some internal type module which can be used from the tests
     , GQLDocument (..)
