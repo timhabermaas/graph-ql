@@ -22,9 +22,7 @@ ignoredChars =
 
 name :: GraphQLParser GQLName
 name = do
-    c <- firstCharacter
-    cs <- remainingCharacters
-    return (c:cs)
+    (:) <$> firstCharacter <*> remainingCharacters
   where
     firstCharacter = oneOf ['a'..'z'] <|> oneOf ['A'..'Z'] <|> char '_'
     remainingCharacters = many $ firstCharacter <|> oneOf ['0'..'9']
@@ -95,7 +93,7 @@ selectionSetParser = do
     ignoredChars
     return fields
 
-variableDefinitionParser :: Parsec Text () [GQLVariable]
+variableDefinitionParser :: Parsec Text () [GQLVariableDefinition]
 variableDefinitionParser = do
     ignoredChars
     char '('
@@ -118,7 +116,7 @@ variableDefinitionParser = do
       defaultValue <- try (Just <$> defaultValueParser) <|> (return Nothing)
       ignoredChars
       -- TODO: default value
-      return $ GQLVariable variableName type' defaultValue
+      return $ GQLVariableDefinition (GQLVariable variableName) type' defaultValue
     defaultValueParser = do
       char '='
       ignoredChars

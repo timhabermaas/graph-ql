@@ -2,6 +2,7 @@ module Data.GraphQL.Types
     ( GQLDocument (..)
     , GQLOperationDefinition (..)
     , GQLSelection (..)
+    , GQLVariableDefinition (..)
     , GQLVariable (..)
     , GQLType (..)
     , GQLBaseType (..)
@@ -18,10 +19,11 @@ data GQLBaseType = GQLNamedType String | GQLListType String deriving (Eq, Show)
 data GQLType = GQLType GQLBaseType | GQLNullableType GQLBaseType deriving (Eq, Show)
 -- TODO int, float and stuff...
 type GQLDefaultValue = GQLValue
-data GQLVariable = GQLVariable GQLName GQLType (Maybe GQLDefaultValue) deriving (Eq, Show)
+data GQLVariable = GQLVariable GQLName deriving (Eq, Show)
+data GQLVariableDefinition = GQLVariableDefinition GQLVariable GQLType (Maybe GQLDefaultValue) deriving (Eq, Show)
 -- FIXME This allows a query to have variables without being named which
 --       is actually not allowed by the specification.
-data GQLOperationDefinition = GQLQuery (Maybe GQLName) [GQLVariable] GQLSelectionList | GQLCommand | Nope deriving (Eq, Show)
+data GQLOperationDefinition = GQLQuery (Maybe GQLName) [GQLVariableDefinition] GQLSelectionList | GQLCommand | Nope deriving (Eq, Show)
 type GQLDocument = GQLOperationDefinition
 
 data GQLObjectField = GQLObjectField GQLName GQLValue deriving (Eq, Show)

@@ -35,45 +35,45 @@ main = hspec $ do
     describe "queries with variables" $ do
       it "one variable" $ do
         (p "query foo($bar : String) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (t "String") Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (t "String") Nothing] [GQLField "abc_" []]
       it "two variables" $ do
         (p "query foo($bar : String $foo: Integer) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (t "String") Nothing, GQLVariable "foo" (t "Integer") Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (t "String") Nothing, GQLVariableDefinition (GQLVariable "foo") (t "Integer") Nothing] [GQLField "abc_" []]
       it "list types" $ do
         (p "query foo($bar : [String]) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "String")) Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) Nothing] [GQLField "abc_" []]
       it "nullable named types" $ do
         (p "query foo($bar : [String] !) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
       it "nullable list types" $ do
         (p "query foo($bar : [String] !) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
 
     describe "default values" $ do
       it "integer value" $ do
         (p "query foo($bar : [String] = -2 ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "String")) (Just $ GQLIntValue (-2))] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) (Just $ GQLIntValue (-2))] [GQLField "abc_" []]
       it "integer value 0" $ do
         (p "query foo($bar : [String] = 0 ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "String")) (Just $ GQLIntValue 0)] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) (Just $ GQLIntValue 0)] [GQLField "abc_" []]
       it "boolean value true" $ do
         (p "query foo($bar : [Boolean] = true ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue True)] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue True)] [GQLField "abc_" []]
       it "boolean value false" $ do
         (p "query foo($bar : [Boolean] = false ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue False)] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue False)] [GQLField "abc_" []]
       it "empty array" $ do
         (p "query foo($bar : [Integer] = [] ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Integer")) (Just $ GQLListValue [])] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "Integer")) (Just $ GQLListValue [])] [GQLField "abc_" []]
       it "integer array" $ do
         (p "query foo($bar : [Integer] = [ 2 -2] ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Integer")) (Just $ GQLListValue [GQLIntValue 2, GQLIntValue (-2)])] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "Integer")) (Just $ GQLListValue [GQLIntValue 2, GQLIntValue (-2)])] [GQLField "abc_" []]
       it "simple objects" $ do
         (p "query foo($bar : Object = { foo: 2 } ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLNamedType "Object")) (Just $ GQLObjectValue [GQLObjectField "foo" (GQLIntValue 2)])] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Object")) (Just $ GQLObjectValue [GQLObjectField "foo" (GQLIntValue 2)])] [GQLField "abc_" []]
       it "nested objects" $ do
         (p "query foo($bar : Object = { foo: {bar: true a: 3} } ) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLNamedType "Object")) (Just (GQLObjectValue [GQLObjectField "foo" (GQLObjectValue [GQLObjectField "bar" (GQLBooleanValue True),GQLObjectField "a" (GQLIntValue 3)])]))] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Object")) (Just (GQLObjectValue [GQLObjectField "foo" (GQLObjectValue [GQLObjectField "bar" (GQLBooleanValue True),GQLObjectField "a" (GQLIntValue 3)])]))] [GQLField "abc_" []]
 
 
     describe "nested queries" $ do
