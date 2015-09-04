@@ -28,11 +28,21 @@ name = do
     remainingCharacters = many $ firstCharacter <|> oneOf ['0'..'9']
 
 valueParser = do
-    ignoredChars *> (try object <|> try list <|> bool <|> int) <* ignoredChars
+    ignoredChars *> (try object
+                <|> try list
+                <|> GQLVariableValue <$> try variable
+                <|> bool
+                <|> int)
+    <* ignoredChars
 
 bool :: GraphQLParser GQLValue
 bool = do
-    GQLBooleanValue <$> ((True <$ string "true") <|> (False <$ string "false"))
+      GQLBooleanValue True <$ string "true"
+  <|> GQLBooleanValue False <$ string "false"
+
+
+variable :: GraphQLParser GQLVariable
+variable = char '$' *> (GQLVariable <$> name)
 
 int :: GraphQLParser GQLValue
 int = do

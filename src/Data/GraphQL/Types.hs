@@ -35,4 +35,5 @@ data GQLValue =
   | GQLBooleanValue Bool
   | GQLListValue [GQLValue] -- TODO arbitrary values possible?
   | GQLObjectValue [GQLObjectField]
+  | GQLVariableValue GQLVariable
   deriving (Eq, Show)

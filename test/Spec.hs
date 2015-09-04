@@ -74,6 +74,9 @@ main = hspec $ do
       it "nested objects" $ do
         (p "query foo($bar : Object = { foo: {bar: true a: 3} } ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Object")) (Just (GQLObjectValue [GQLObjectField "foo" (GQLObjectValue [GQLObjectField "bar" (GQLBooleanValue True),GQLObjectField "a" (GQLIntValue 3)])]))] [GQLField "abc_" []]
+      it "variable" $ do
+        (p "query foo($bar : Integer = $n ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Integer")) (Just $ GQLVariableValue (GQLVariable "n"))] [GQLField "abc_" []]
 
 
     describe "nested queries" $ do
