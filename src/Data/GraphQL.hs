@@ -48,8 +48,7 @@ variable = char '$' *> (GQLVariable <$> name)
 
 int :: GraphQLParser GQLValue
 int = do
-    -- TODO allow plus sign
-    signF <- try ((*(-1)) <$ char '-') <|> return id
+    signF <- try ((*(-1)) <$ char '-') <|> try (id <$ char '+') <|> return id
     number <- try digits <|> zero
     return $ GQLIntValue $ signF $ read $ number
   where

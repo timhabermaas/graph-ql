@@ -53,6 +53,9 @@ main = hspec $ do
       it "integer value" $ do
         (p "query foo($bar : [String] = -2 ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) (Just $ GQLIntValue (-2))] [GQLField "abc_" []]
+      it "integer value (+)" $ do
+        (p "query foo($bar : [String] = +2 ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) (Just $ GQLIntValue 2)] [GQLField "abc_" []]
       it "integer value 0" $ do
         (p "query foo($bar : [String] = 0 ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) (Just $ GQLIntValue 0)] [GQLField "abc_" []]
