@@ -29,6 +29,22 @@ name = do
     firstCharacter = oneOf ['a'..'z'] <|> oneOf ['A'..'Z'] <|> char '_'
     remainingCharacters = many $ firstCharacter <|> oneOf ['0'..'9']
 
+bool :: GraphQLParser GQLValue
+bool = do
+    GQLBooleanValue <$> ((True <$ string "true") <|> (False <$ string "false"))
+
+int :: GraphQLParser GQLValue
+int = do
+    signF <- try ((*(-1)) <$ char '-') <|> return id
+    number <- try digits <|> zero
+    return $ GQLIntValue $ signF $ read $ number
+  where
+    digits = (:) <$> nonZeroDigit <*> many digit
+    nonZeroDigit = oneOf ['1'..'9']
+    zero = "0" <$ char '0'
+
+
+
 field :: GraphQLParser GQLSelection
 field = do
     ignoredChars
@@ -69,8 +85,19 @@ variableDefinitionParser = do
       ignoredChars
       type' <- typeParser
       ignoredChars
+      defaultValue <- try (Just <$> defaultValueParser) <|> (return Nothing)
+      ignoredChars
       -- TODO: default value
-      return $ GQLVariable variableName type' Nothing
+      return $ GQLVariable variableName type' defaultValue
+    defaultValueParser = do
+      char '='
+      ignoredChars
+      v <- valueParser
+      return v
+    valueParser = do
+      bool <|> int
+
+
     typeParser = do
       type' <- listType <|> namedType
       ignoredChars

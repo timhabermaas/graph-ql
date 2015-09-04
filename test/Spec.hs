@@ -49,6 +49,20 @@ main = hspec $ do
         (p "query foo($bar : [String] !) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariable "bar" (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
 
+    describe "default values" $ do
+      it "integer value" $ do
+        (p "query foo($bar : [String] = -2 ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "String")) (Just $ GQLIntValue (-2))] [GQLField "abc_" []]
+      it "integer value 0" $ do
+        (p "query foo($bar : [String] = 0 ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "String")) (Just $ GQLIntValue 0)] [GQLField "abc_" []]
+      it "boolean value true" $ do
+        (p "query foo($bar : [Boolean] = true ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue True)] [GQLField "abc_" []]
+      it "boolean value false" $ do
+        (p "query foo($bar : [Boolean] = false ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue False)] [GQLField "abc_" []]
+
     describe "nested queries" $ do
       it "one level deep" $ do
         (p "query foo { parent { child } }") `shouldBe`
