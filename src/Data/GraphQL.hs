@@ -30,7 +30,7 @@ name = do
     remainingCharacters = many $ firstCharacter <|> oneOf ['0'..'9']
 
 valueParser = do
-    try object <|> bool <|> int
+    ignoredChars *> (try object <|> try list <|> bool <|> int) <* ignoredChars
 
 bool :: GraphQLParser GQLValue
 bool = do
@@ -45,6 +45,15 @@ int = do
     digits = (:) <$> nonZeroDigit <*> many digit
     nonZeroDigit = oneOf ['1'..'9']
     zero = "0" <$ char '0'
+
+list :: GraphQLParser GQLValue
+list = do
+    char '['
+    ignoredChars
+    values <- many valueParser
+    ignoredChars
+    char ']'
+    return $ GQLListValue values
 
 object :: GraphQLParser GQLValue
 object = do

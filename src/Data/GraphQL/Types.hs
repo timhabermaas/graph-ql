@@ -31,5 +31,6 @@ data GQLValue =
   | GQLFloatValue Float
   | GQLStringValue String
   | GQLBooleanValue Bool
+  | GQLListValue [GQLValue] -- TODO arbitrary values possible?
   | GQLObjectValue [GQLObjectField]
   deriving (Eq, Show)

@@ -62,6 +62,12 @@ main = hspec $ do
       it "boolean value false" $ do
         (p "query foo($bar : [Boolean] = false ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Boolean")) (Just $ GQLBooleanValue False)] [GQLField "abc_" []]
+      it "empty array" $ do
+        (p "query foo($bar : [Integer] = [] ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Integer")) (Just $ GQLListValue [])] [GQLField "abc_" []]
+      it "integer array" $ do
+        (p "query foo($bar : [Integer] = [ 2 -2] ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLListType "Integer")) (Just $ GQLListValue [GQLIntValue 2, GQLIntValue (-2)])] [GQLField "abc_" []]
       it "simple objects" $ do
         (p "query foo($bar : Object = { foo: 2 } ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariable "bar" (GQLType (GQLNamedType "Object")) (Just $ GQLObjectValue [GQLObjectField "foo" (GQLIntValue 2)])] [GQLField "abc_" []]
