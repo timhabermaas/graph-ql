@@ -32,6 +32,8 @@ valueParser = do
                 <|> try list
                 <|> GQLVariableValue <$> try variable
                 <|> bool
+                <|> try enum
+                <|> try float
                 <|> int)
     <* ignoredChars
 
@@ -46,6 +48,7 @@ variable = char '$' *> (GQLVariable <$> name)
 
 int :: GraphQLParser GQLValue
 int = do
+    -- TODO allow plus sign
     signF <- try ((*(-1)) <$ char '-') <|> return id
     number <- try digits <|> zero
     return $ GQLIntValue $ signF $ read $ number
@@ -53,6 +56,21 @@ int = do
     digits = (:) <$> nonZeroDigit <*> many digit
     nonZeroDigit = oneOf ['1'..'9']
     zero = "0" <$ char '0'
+
+float :: GraphQLParser GQLValue
+-- TODO exponential missing; crappy implementation
+float = do
+    GQLIntValue intPart <- int
+    f <- fractionalPart
+    return $ GQLFloatValue $ read (show intPart ++ "." ++ f)
+  where
+    fractionalPart = do
+      char '.'
+      many (oneOf ['0'..'9'])
+
+
+enum :: GraphQLParser GQLValue
+enum = GQLEnumValue <$> name
 
 list :: GraphQLParser GQLValue
 list = do

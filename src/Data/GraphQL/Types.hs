@@ -36,4 +36,5 @@ data GQLValue =
   | GQLListValue [GQLValue] -- TODO arbitrary values possible?
   | GQLObjectValue [GQLObjectField]
   | GQLVariableValue GQLVariable
+  | GQLEnumValue GQLName
   deriving (Eq, Show)

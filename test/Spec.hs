@@ -77,6 +77,13 @@ main = hspec $ do
       it "variable" $ do
         (p "query foo($bar : Integer = $n ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Integer")) (Just $ GQLVariableValue (GQLVariable "n"))] [GQLField "abc_" []]
+      it "variable" $ do
+        (p "query foo($bar : Integer = ACTIVATED ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Integer")) (Just $ GQLEnumValue "ACTIVATED")] [GQLField "abc_" []]
+      it "float" $ do
+        (p "query foo($bar : Float = 13.2 ) { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Float")) (Just $ GQLFloatValue 13.2)] [GQLField "abc_" []]
+
 
 
     describe "nested queries" $ do
