@@ -155,7 +155,7 @@ variableDefinitionParser = do
       type' <- listType <|> namedType
       ignoredChars
       -- TODO: Too cryptic?
-      try (GQLNullableType type' <$ char '!') <|> (return $ GQLType type')
+      try (GQLNonNullType type' <$ char '!') <|> (return $ GQLType type')
     namedType = do
       name <- name
       return $ GQLNamedType name

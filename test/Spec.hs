@@ -44,10 +44,10 @@ main = hspec $ do
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLListType "String")) Nothing] [GQLField "abc_" []]
       it "nullable named types" $ do
         (p "query foo($bar : [String] !) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLNonNullType (GQLListType "String")) Nothing] [GQLField "abc_" []]
       it "nullable list types" $ do
         (p "query foo($bar : [String] !) { abc_  }") `shouldBe`
-         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLNullableType (GQLListType "String")) Nothing] [GQLField "abc_" []]
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLNonNullType (GQLListType "String")) Nothing] [GQLField "abc_" []]
 
     describe "default values" $ do
       it "integer value" $ do

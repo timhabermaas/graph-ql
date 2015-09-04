@@ -16,7 +16,7 @@ type GQLName = String
 data GQLSelection = GQLField GQLName GQLSelectionList deriving (Eq, Show)--GQLSelection GQLName GQLSelectionList deriving (Eq, Show)
 type GQLSelectionList = [GQLSelection]
 data GQLBaseType = GQLNamedType String | GQLListType String deriving (Eq, Show)
-data GQLType = GQLType GQLBaseType | GQLNullableType GQLBaseType deriving (Eq, Show)
+data GQLType = GQLType GQLBaseType | GQLNonNullType GQLBaseType deriving (Eq, Show)
 -- TODO int, float and stuff...
 type GQLDefaultValue = GQLValue
 data GQLVariable = GQLVariable GQLName deriving (Eq, Show)
