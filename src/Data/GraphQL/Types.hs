@@ -6,6 +6,7 @@ module Data.GraphQL.Types
     , GQLType (..)
     , GQLBaseType (..)
     , GQLValue (..)
+    , GQLObjectField (..)
     , GQLName
     , GQLSelectionList
     ) where
@@ -23,4 +24,12 @@ data GQLVariable = GQLVariable GQLName GQLType (Maybe GQLDefaultValue) deriving 
 data GQLOperationDefinition = GQLQuery (Maybe GQLName) [GQLVariable] GQLSelectionList | GQLCommand | Nope deriving (Eq, Show)
 type GQLDocument = GQLOperationDefinition
 
-data GQLValue = GQLIntValue Int | GQLFloatValue Float | GQLStringValue String | GQLBooleanValue Bool deriving (Eq, Show)
+data GQLObjectField = GQLObjectField GQLName GQLValue deriving (Eq, Show)
+
+data GQLValue =
+    GQLIntValue Int
+  | GQLFloatValue Float
+  | GQLStringValue String
+  | GQLBooleanValue Bool
+  | GQLObjectValue [GQLObjectField]
+  deriving (Eq, Show)

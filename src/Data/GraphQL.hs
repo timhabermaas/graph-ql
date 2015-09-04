@@ -29,6 +29,9 @@ name = do
     firstCharacter = oneOf ['a'..'z'] <|> oneOf ['A'..'Z'] <|> char '_'
     remainingCharacters = many $ firstCharacter <|> oneOf ['0'..'9']
 
+valueParser = do
+    try object <|> bool <|> int
+
 bool :: GraphQLParser GQLValue
 bool = do
     GQLBooleanValue <$> ((True <$ string "true") <|> (False <$ string "false"))
@@ -43,6 +46,24 @@ int = do
     nonZeroDigit = oneOf ['1'..'9']
     zero = "0" <$ char '0'
 
+object :: GraphQLParser GQLValue
+object = do
+    char '{'
+    ignoredChars
+    objectFields <- many objectField
+    ignoredChars
+    char '}'
+    return $ GQLObjectValue objectFields
+  where
+    objectField = do
+      ignoredChars
+      name <- name
+      ignoredChars
+      char ':'
+      ignoredChars
+      content <- valueParser
+      ignoredChars
+      return $ GQLObjectField name content
 
 
 field :: GraphQLParser GQLSelection
@@ -94,8 +115,6 @@ variableDefinitionParser = do
       ignoredChars
       v <- valueParser
       return v
-    valueParser = do
-      bool <|> int
 
 
     typeParser = do
