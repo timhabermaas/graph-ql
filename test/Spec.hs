@@ -2,6 +2,7 @@
 
 import Test.Hspec
 import Data.GraphQL
+import Data.GraphQL.Types
 import Data.Maybe (fromJust)
 
 p s =

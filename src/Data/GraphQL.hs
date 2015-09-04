@@ -1,33 +1,17 @@
 {-# LANGUAGE FlexibleContexts #-}
+
 module Data.GraphQL
     ( parseGraphQL
-    -- TODO move these to some internal type module which can be used from the tests
-    , GQLDocument (..)
-    , GQLOperationDefinition (..)
-    , GQLSelection (..)
-    , GQLVariable (..)
-    , GQLType (..)
-    , GQLBaseType (..)
     ) where
 
 import Data.Text
 import Text.Parsec
 
+import Data.GraphQL.Types
+
 
 type GraphQLParser a = Parsec Text () a
 
-type Name = String
-data GQLSelection = GQLField Name GQLSelectionList deriving (Eq, Show)--GQLSelection Name GQLSelectionList deriving (Eq, Show)
-type GQLSelectionList = [GQLSelection]
-data GQLBaseType = GQLNamedType String | GQLListType String deriving (Eq, Show)
-data GQLType = GQLType GQLBaseType | GQLNullableType GQLBaseType deriving (Eq, Show)
--- TODO int, float and stuff...
-type GQLDefaultValue = String
-data GQLVariable = GQLVariable Name GQLType (Maybe GQLDefaultValue) deriving (Eq, Show)
--- FIXME This allows a query to have variables without being named which
---       is actually not allowed by the specification.
-data GQLOperationDefinition = GQLQuery (Maybe Name) [GQLVariable] GQLSelectionList | GQLCommand | Nope deriving (Eq, Show)
-type GQLDocument = GQLOperationDefinition
 
 ignoredChars =
     skipMany ignoredChar
@@ -36,7 +20,7 @@ ignoredChars =
     --      according to the spec
     ignoredChar = space <|> endOfLine
 
-name :: GraphQLParser Name
+name :: GraphQLParser GQLName
 name = do
     c <- firstCharacter
     cs <- remainingCharacters
