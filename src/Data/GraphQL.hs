@@ -188,6 +188,8 @@ operationDefinitionParser = do
       fields <- selectionSetParser
       return $ GQLQuery Nothing [] fields
     longSyntax = do
+      try query <|> mutation
+    query = do
       string "query"
       ignoredChars
       name <- name
@@ -196,6 +198,16 @@ operationDefinitionParser = do
       ignoredChars
       fields <- selectionSetParser
       return $ GQLQuery (Just name) variables fields
+    -- TODO remove duplication
+    mutation = do
+      string "mutation"
+      ignoredChars
+      name <- name
+      ignoredChars
+      variables <- try variableDefinitionParser <|> return []
+      ignoredChars
+      fields <- selectionSetParser
+      return $ GQLMutation (Just name) variables fields
 
 
 parseGraphQL :: Text -> Either ParseError GQLDocument

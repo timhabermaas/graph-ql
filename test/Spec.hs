@@ -18,6 +18,10 @@ t = GQLType . GQLNamedType
 
 main :: IO ()
 main = hspec $ do
+  describe "parsing valid mutations" $ do
+    it "foo" $ do
+      (p "mutation foo($a: Integer = 2) { name }") `shouldBe`
+       GQLMutation (Just "foo") [GQLVariableDefinition (GQLVariable "a") (t "Integer") (Just $ GQLIntValue 2)] [GQLField "name" []]
   describe "parsing valid queries" $ do
     describe "shorthand syntax" $ do
       it "simple" $ do

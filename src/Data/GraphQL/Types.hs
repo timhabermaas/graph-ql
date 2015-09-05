@@ -23,7 +23,9 @@ data GQLVariable = GQLVariable GQLName deriving (Eq, Show)
 data GQLVariableDefinition = GQLVariableDefinition GQLVariable GQLType (Maybe GQLDefaultValue) deriving (Eq, Show)
 -- FIXME This allows a query to have variables without being named which
 --       is actually not allowed by the specification.
-data GQLOperationDefinition = GQLQuery (Maybe GQLName) [GQLVariableDefinition] GQLSelectionList | GQLCommand | Nope deriving (Eq, Show)
+data GQLOperationDefinition = GQLQuery (Maybe GQLName) [GQLVariableDefinition] GQLSelectionList
+                            | GQLMutation (Maybe GQLName) [GQLVariableDefinition] GQLSelectionList
+                            deriving (Eq, Show)
 type GQLDocument = GQLOperationDefinition
 
 data GQLObjectField = GQLObjectField GQLName GQLValue deriving (Eq, Show)
