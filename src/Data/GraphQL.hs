@@ -31,11 +31,22 @@ valueParser = do
     ignoredChars *> (try object
                 <|> try list
                 <|> GQLVariableValue <$> try variable
+                <|> try stringValue
                 <|> bool
                 <|> try enum
                 <|> try float
                 <|> int)
     <* ignoredChars
+
+stringValue :: GraphQLParser GQLValue
+stringValue = do
+    char '"'
+    chars <- many sourceCharacter
+    char '"'
+    return $ GQLStringValue chars
+  where
+    -- TODO unicode support missing
+    sourceCharacter = noneOf ['"', '\\', '\n']
 
 bool :: GraphQLParser GQLValue
 bool = do

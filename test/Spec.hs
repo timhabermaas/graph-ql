@@ -80,12 +80,19 @@ main = hspec $ do
       it "variable" $ do
         (p "query foo($bar : Integer = $n ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Integer")) (Just $ GQLVariableValue (GQLVariable "n"))] [GQLField "abc_" []]
-      it "variable" $ do
+      it "enum" $ do
         (p "query foo($bar : Integer = ACTIVATED ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Integer")) (Just $ GQLEnumValue "ACTIVATED")] [GQLField "abc_" []]
       it "float" $ do
         (p "query foo($bar : Float = 13.2 ) { abc_  }") `shouldBe`
          GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "Float")) (Just $ GQLFloatValue 13.2)] [GQLField "abc_" []]
+      it "empty string" $ do
+        (p "query foo($bar : String = \"\") { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "String")) (Just $ GQLStringValue "")] [GQLField "abc_" []]
+      it "non-empty string" $ do
+        (p "query foo($bar : String = \"content and spaces\") { abc_  }") `shouldBe`
+         GQLQuery (Just "foo") [GQLVariableDefinition (GQLVariable "bar") (GQLType (GQLNamedType "String")) (Just $ GQLStringValue "content and spaces")] [GQLField "abc_" []]
+
 
 
 
