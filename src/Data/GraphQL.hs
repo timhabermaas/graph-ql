@@ -18,7 +18,7 @@ ignoredChars =
   where
     -- TODO there are actually more characters to ignore
     --      according to the spec
-    ignoredChar = space <|> endOfLine
+    ignoredChar = space <|> endOfLine <|> char ','
 
 name :: GraphQLParser GQLName
 name = do
