@@ -57,15 +57,21 @@ bool = do
 variable :: GraphQLParser GQLVariable
 variable = char '$' *> (GQLVariable <$> name)
 
-int :: GraphQLParser GQLValue
-int = do
-    signF <- try ((*(-1)) <$ char '-') <|> try (id <$ char '+') <|> return id
-    number <- try digits <|> zero
-    return $ GQLIntValue $ signF $ read $ number
+signed :: Num a => GraphQLParser a -> GraphQLParser a
+signed numberParser = do
+  sign <- try (1 <$ char '+') <|> try ((-1) <$ char '-') <|> (return 1)
+  number <- numberParser
+  return $ number * sign
+
+number :: GraphQLParser Int
+number = read <$> (try digits <|> zero)
   where
     digits = (:) <$> nonZeroDigit <*> many digit
     nonZeroDigit = oneOf ['1'..'9']
     zero = "0" <$ char '0'
+
+int :: GraphQLParser GQLValue
+int = GQLIntValue <$> signed number
 
 float :: GraphQLParser GQLValue
 -- TODO exponential missing; crappy implementation
